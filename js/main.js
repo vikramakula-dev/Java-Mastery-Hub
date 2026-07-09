@@ -52,6 +52,17 @@ function debounce(fn, delay = 200) {
   };
 }
 
+function setHeroCollapsed(collapsed) {
+  const hero = el('heroCard');
+  const btn = el('heroCollapseToggle');
+  if (!hero || !btn) return;
+  hero.classList.toggle('collapsed', collapsed);
+  btn.setAttribute('aria-expanded', String(!collapsed));
+  btn.title = collapsed ? 'Show intro text' : 'Hide intro text';
+  btn.querySelector('span').textContent = collapsed ? '+' : '✕';
+  try { localStorage.setItem('jm2_heroCollapsed', JSON.stringify(collapsed)); } catch (e) {}
+}
+
 async function selectModule(mod) {
   if (!modulesList.includes(mod)) return;
   state.module = mod;
@@ -74,6 +85,13 @@ async function init() {
 
   await renderModule();
 
+  // Collapse the marketing intro text once the user has a module open — it only
+  // needs to be seen once, and repeating it above every module wastes a full
+  // screen of scroll on mobile. A manual toggle lets it be brought back.
+  let heroCollapsed = false;
+  try { heroCollapsed = JSON.parse(localStorage.getItem('jm2_heroCollapsed') || 'false'); } catch (e) {}
+  setHeroCollapsed(heroCollapsed || state.module !== 'Introduction');
+
   // Event Delegation for module selection and tab switching
   document.addEventListener("click", async (e) => {
     if (e.target.closest('#sidebarToggle')) {
@@ -82,9 +100,16 @@ async function init() {
       return;
     }
 
+    if (e.target.closest('#heroCollapseToggle')) {
+      const isCollapsed = el('heroCard')?.classList.contains('collapsed');
+      setHeroCollapsed(!isCollapsed);
+      return;
+    }
+
     const modBtn = e.target.closest("[data-module]");
     if (modBtn) {
       e.preventDefault();
+      setHeroCollapsed(true);
       await selectModule(modBtn.dataset.module);
       return;
     }

@@ -42,8 +42,11 @@
     </aside>
 
     <main class="main">
-      <header class="hero card">
-        <div>
+      <header class="hero card" id="heroCard">
+        <button id="heroCollapseToggle" class="hero-collapse-btn" type="button" aria-expanded="true" aria-controls="heroIntro" title="Hide intro text">
+          <span aria-hidden="true">✕</span>
+        </button>
+        <div id="heroIntro">
           <span class="eyebrow">Offline Core Java learning portal</span>
           <h2>Master Java with roadmap, mind map, quizzes, flashcards, notes, and practice.</h2>
           <p>Built for complete Core Java study with structured concepts, interview prep, and hands-on revision.</p>

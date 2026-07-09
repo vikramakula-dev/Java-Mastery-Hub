@@ -310,26 +310,26 @@ export function renderStats() {
   const notesCount = state.notes.length;
 
   stats.innerHTML = `
-    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:15px; width:100%;">
-      <div class="stat-box" style="flex:1; min-width:120px;">
+    <div class="stat-box-grid">
+      <div class="stat-box">
         <strong style="color:var(--accent);">${done} / ${total}</strong>
         <span>Modules Done</span>
       </div>
-      <div class="stat-box" style="flex:1; min-width:120px;">
+      <div class="stat-box">
         <strong style="color:${pct > 75 ? '#4ade80' : 'var(--warn)'};">${pct}%</strong>
         <span>Completion</span>
       </div>
-      <div class="stat-box" style="flex:1; min-width:120px;">
+      <div class="stat-box">
         <strong style="color:var(--accent-2);">${notesCount}</strong>
         <span>Saved Notes</span>
       </div>
-      <div class="stat-box" style="flex:1; min-width:120px;">
+      <div class="stat-box">
         <strong style="color:var(--accent-3);">${done > 0 ? (done * 0.5).toFixed(1) + ' hrs' : '0 hrs'}</strong>
         <span>Study Time</span>
       </div>
     </div>
-    <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin-top:15px; overflow:hidden;">
-      <div style="width:${pct}%; height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-3)); transition:width 0.5s ease;"></div>
+    <div class="stat-progress-track">
+      <div class="stat-progress-fill" style="width:${pct}%;"></div>
     </div>
   `;
 }

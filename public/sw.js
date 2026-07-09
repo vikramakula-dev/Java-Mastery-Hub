@@ -1,5 +1,5 @@
-const CACHE = "jmh-v1";
-const PRECACHE = ["./", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
+const CACHE = "jmh-v2";
+const PRECACHE = ["./", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/logo.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(

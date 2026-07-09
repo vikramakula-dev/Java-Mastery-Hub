@@ -1,35 +1,130 @@
-# Java For Selenium Mastery
+<div align="center">
 
-An offline Core Java learning platform designed for Selenium automation interview preparation.
+<img src="public/icons/logo.svg" alt="Java Mastery Hub logo" width="96" height="96" />
 
-## Current Status
+# Java Mastery Hub
 
-The live application currently loads the root `app.js` directly from `index.html`.
-This is the safest runtime path while the modular refactor is incomplete. The files
-inside `js/`, `data/`, `css/`, and `utils/` are scaffolding and are not the current
-source of truth.
+**An offline, installable Core Java learning platform built for Selenium automation interview prep.**
 
-The detailed development history, feature inventory, architecture notes, known
-issues, and continuation instructions are in
-[`PROJECT_HANDOFF_FOR_CLAUDE_GEMINI.md`](PROJECT_HANDOFF_FOR_CLAUDE_GEMINI.md).
+*"Code never lies, comments sometimes do."*
 
-## Run
+[![Build with Vite](https://img.shields.io/badge/build-vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![PWA Ready](https://img.shields.io/badge/PWA-installable-f0b429)](#-install-as-a-desktop-app)
+[![License: ISC](https://img.shields.io/badge/license-ISC-a78bfa)](#license)
 
-Open `index.html` in a browser. The project is intentionally dependency-free and
-does not require a build command or web server.
+</div>
 
-## Active Files
+---
 
-- `index.html`: application shell and UI regions
-- `style.css`: complete premium visual design
-- `app.js`: lesson data, rendering, state, interactions, and persistence
+## What is this?
 
-## Supporting Scaffolding
+Java Mastery Hub is a single-page study app for Core Java, purpose-built for QA/SDET engineers preparing for Selenium automation interviews. Every concept is taught the same way an experienced engineer would explain it in an interview: not just "what is X" but "here's the bug X causes, and here's how you fix it."
 
-- `js/`: proposed feature modules
-- `data/`: proposed lesson data modules
-- `css/`: proposed split stylesheets
-- `utils/`: proposed shared utilities
+No backend, no account, no tracking — everything runs entirely in your browser and saves to `localStorage`. Install it as a desktop app and it works fully offline.
 
-Do not switch `index.html` to `js/app.js` until the modular files are made fully
-self-contained and tested through the browser.
+## Features
+
+| | |
+|---|---|
+| 📚 **19 structured modules** | From `Introduction` through `JVM` internals, plus dedicated **Advanced Java**, **Design Patterns**, and **Capstone Projects** modules |
+| 💡 **159 real-world interview questions** | Scenario-based, not definition recall — *"your parallel suite works with 2 threads but fails with 8, why?"* instead of *"what is a thread?"* |
+| 🧩 **53 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
+| 🃏 **Flashcards** | Auto-generated from each module's interview questions, with flip and next-card navigation |
+| 📝 **Notes** | Freeform per-topic notes with `#tag` highlighting, saved locally |
+| 🎯 **Mock interviews** | A dedicated Selenium interview question bank (locators, waits, Shadow DOM, relative locators, and more) |
+| 🏗️ **Capstone projects** | Multi-milestone, framework-building projects (Page Object Model, Test Data Manager, parallel cross-browser runner) that stitch every concept together |
+| 🧠 **Memory visualizer** | Stack/heap diagrams per topic to build a real mental model of the JVM |
+| 🔍 **Live search** | Instant sidebar filtering across all modules |
+| 📈 **Progress tracking** | Completion stats, notes count, and study time, persisted locally |
+| 📲 **Installable PWA** | Add to your desktop/home screen from the browser — works fully offline afterward |
+
+## Curriculum
+
+<details>
+<summary><strong>Core Java (16 modules)</strong></summary>
+
+Introduction · OOPS · Interfaces · Packages · Strings · Wrapper Classes · Java IO · Exception Handling · Multithreading · Nested Classes · Enum & Garbage Collection · Collections Framework · Java Networking · AWT · Swing · JVM
+
+</details>
+
+<details>
+<summary><strong>Beyond the basics (3 modules)</strong></summary>
+
+- **Advanced Java** — Generics, Lambdas & Functional Interfaces, the Streams API, `Optional`, method references
+- **Design Patterns** — Singleton (with `ThreadLocal`), Factory, Builder, and Page Object Model, each mapped directly to real Selenium framework code
+- **Capstone Projects** — build a Mini POM framework, a Test Data Manager, and a parallel cross-browser test runner, milestone by milestone
+
+</details>
+
+Every module includes: **Overview** (concept, why it exists, real-world analogy, common mistakes, core fundamentals) · **Programs** (worked code examples with line-by-line walkthroughs) · **Challenges** (fill-in-the-blank practice) · **Visual Memory** (stack/heap diagrams) · **Interview** (real-world Q&A) · **Flashcards** · **Notes** · **Mock Interview**.
+
+## Getting started
+
+```bash
+# Clone
+git clone https://github.com/vikramakula-dev/Java-Mastery-Hub.git
+cd Java-Mastery-Hub
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
+```
+
+Open the printed `http://localhost:5173` URL in your browser.
+
+### Build for production
+
+```bash
+npm run build
+```
+
+This produces a single self-contained `dist/index.html` — everything (JS, CSS, and this whole app) inlined into one file. Double-click it and it runs, no server required.
+
+## Install as a desktop app
+
+Java Mastery Hub is a full PWA:
+
+1. Run `npm run build && npm run preview`
+2. Open the printed preview URL (e.g. `http://localhost:4173`) in Chrome or Edge
+3. Click the **install** icon in the address bar (or *⋮ menu → Install Java Mastery Hub*)
+
+It launches in its own window with its own icon, and — since the service worker caches everything on first load — keeps working completely offline afterward.
+
+## Tech stack
+
+- **Vanilla JavaScript (ES modules)** — no framework, no runtime dependencies
+- **[Vite](https://vitejs.dev)** + [`vite-plugin-singlefile`](https://github.com/richardtallent/vite-plugin-singlefile) for a zero-dependency, single-file production build
+- **`localStorage`** for all persistence (notes, progress, completed modules, practice state) — nothing ever leaves your machine
+- A hand-rolled **service worker** for offline caching
+
+## Project structure
+
+```
+├── index.html              # App shell
+├── style.css                # Full visual design system
+├── js/
+│   ├── main.js               # Event delegation, app bootstrap
+│   ├── router.js              # Module/tab rendering
+│   ├── components.js          # Notes, flashcards, quiz renderers
+│   ├── state.js                # App state + localStorage persistence
+│   └── ui.js                    # DOM helpers, syntax highlighter, XSS-safe escaping
+├── data/                    # One file per module — the actual curriculum content
+├── selenium/
+│   └── mock_interviews.js  # Selenium interview question tracks
+└── public/
+    ├── manifest.webmanifest # PWA manifest
+    ├── sw.js                 # Offline service worker
+    └── icons/                 # App icon (logo.svg + generated PNGs)
+```
+
+Content is fully data-driven — every module is a single object in `data/*.js` with `concept`, `keyPoints`, `examples` (with optional `walkthrough` and `challenges`), and `interview` arrays. Adding new content never requires touching rendering code.
+
+## Security notes
+
+All user-generated content (notes) and all curriculum content rendered into the DOM is passed through a dedicated `escapeHtml()` helper before insertion — there is no unescaped `innerHTML` interpolation of untrusted or dynamic data anywhere in the app.
+
+## License
+
+ISC

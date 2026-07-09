@@ -1,0 +1,54 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#17171f"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0b429"/>
+      <stop offset="55%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+    <linearGradient id="steamGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#f0b429" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#f0b429" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="34%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#glow)"/>
+  <rect x="1" y="1" width="510" height="510" rx="111" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+
+  <!-- Steam curls -->
+  <path d="M 226 132 C 215 120, 215 108, 226 96" fill="none" stroke="url(#steamGrad)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 256 132 C 245 116, 245 100, 256 84" fill="none" stroke="url(#steamGrad)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 286 132 C 275 120, 275 108, 286 96" fill="none" stroke="url(#steamGrad)" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Angle bracket left: < -->
+  <path d="M 138 206 L 84 260 L 138 314" fill="none" stroke="url(#brand)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Angle bracket right: > -->
+  <path d="M 374 206 L 428 260 L 374 314" fill="none" stroke="url(#brand)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Cup handle (drawn first, sits behind the body's right edge) -->
+  <path d="M 318 232 C 356 232, 356 292, 318 296"
+        fill="none" stroke="url(#brand)" stroke-width="17" stroke-linecap="round"/>
+
+  <!-- Coffee cup body -->
+  <path d="M 198 224
+           L 314 224
+           L 305 322
+           C 303 340, 288 353, 270 353
+           L 242 353
+           C 224 353, 209 340, 207 322
+           Z"
+        fill="url(#brand)"/>
+
+  <!-- Saucer / underline accent -->
+  <rect x="196" y="368" width="120" height="13" rx="6.5" fill="url(#brand)" opacity="0.9"/>
+</svg>

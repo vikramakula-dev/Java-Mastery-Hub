@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java Mastery Hub</title>
+  <meta name="description" content="Offline Core Java learning portal for Selenium automation interview preparation" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/logo.svg" type="image/svg+xml" />
+  <link rel="icon" href="./icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button id="sidebarToggle" class="ghost-btn sidebar-toggle-fab" type="button" aria-label="Toggle sidebar" aria-expanded="true">
+    <span aria-hidden="true">☰</span>
+    <span class="toggle-label">Menu</span>
+  </button>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-mark" src="./icons/logo.svg" alt="Java Mastery Hub logo" width="58" height="58" />
+        <div>
+          <h1>Java Mastery Hub</h1>
+          <p>"Code never lies, comments sometimes do."</p>
+        </div>
+      </div>
+
+      <label class="search-wrap">
+        <span>Global Search</span>
+        <input id="globalSearch" type="search" placeholder="Search topics, questions, exercises, code..." />
+      </label>
+
+      <nav id="moduleNav" class="module-nav"></nav>
+
+    </aside>
+
+    <main class="main">
+      <header class="hero card">
+        <div>
+          <span class="eyebrow">Offline Core Java learning portal</span>
+          <h2>Master Java with roadmap, mind map, quizzes, flashcards, notes, and practice.</h2>
+          <p>Built for complete Core Java study with structured concepts, interview prep, and hands-on revision.</p>
+        </div>
+        <div class="hero-stats" id="progressStats"></div>
+      </header>
+
+      <section id="contentArea" class="content-area card"></section>
+
+
+    </main>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

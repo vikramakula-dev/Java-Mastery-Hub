@@ -10,7 +10,10 @@
 
 [![Build with Vite](https://img.shields.io/badge/build-vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
 [![PWA Ready](https://img.shields.io/badge/PWA-installable-f0b429)](#-install-as-a-desktop-app)
+[![Deployed on GitHub Pages](https://img.shields.io/badge/live%20demo-online-4ade80?logo=github)](https://vikramakula-dev.github.io/Java-Mastery-Hub/)
 [![License: ISC](https://img.shields.io/badge/license-ISC-a78bfa)](#license)
+
+### 🔗 [**Open the live app**](https://vikramakula-dev.github.io/Java-Mastery-Hub/)
 
 </div>
 
@@ -58,7 +61,11 @@ Introduction · OOPS · Interfaces · Packages · Strings · Wrapper Classes · 
 
 Every module includes: **Overview** (concept, why it exists, real-world analogy, common mistakes, core fundamentals) · **Programs** (worked code examples with line-by-line walkthroughs) · **Challenges** (fill-in-the-blank practice) · **Visual Memory** (stack/heap diagrams) · **Interview** (real-world Q&A) · **Flashcards** · **Notes** · **Mock Interview**.
 
-## Getting started
+## Try it now
+
+**[vikramakula-dev.github.io/Java-Mastery-Hub](https://vikramakula-dev.github.io/Java-Mastery-Hub/)** — no install, runs straight in your browser.
+
+## Getting started (local)
 
 ```bash
 # Clone

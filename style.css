@@ -398,62 +398,18 @@ kbd {
   pointer-events: none;
 }
 
-.hero {
+/* The hero is a permanent slim stats bar — no intro copy in the UI */
+.hero,
+.hero.collapsed {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr);
-  gap: 22px;
-  align-items: stretch;
-  min-height: 280px;
-  transition: min-height 220ms ease, padding 220ms ease;
-}
-
-#heroIntro {
-  display: grid;
-  align-content: center;
-  gap: 14px;
-  padding: 14px 4px;
-  overflow: hidden;
-  transition: opacity 180ms ease;
-}
-
-/* Collapsed state: intro copy hidden, only the stats bar remains */
-.hero.collapsed {
   grid-template-columns: 1fr;
   min-height: 0;
   padding: 16px 22px;
 }
 
-.hero.collapsed #heroIntro {
-  display: none;
-}
-
-.hero.collapsed .hero-stats {
+.hero .hero-stats {
   align-content: stretch;
-}
-
-.hero-collapse-btn {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 2;
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 0.8rem;
-  line-height: 1;
-  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
-}
-
-.hero-collapse-btn:hover {
-  background: rgba(255,255,255,0.12);
-  color: var(--text);
 }
 
 .eyebrow {
@@ -463,19 +419,6 @@ kbd {
   text-transform: uppercase;
   letter-spacing: 0.22em;
   font-size: 0.74rem;
-}
-
-.hero h2 {
-  font-size: clamp(2.1rem, 3.2vw, 4.3rem);
-  line-height: 0.96;
-  letter-spacing: -0.055em;
-  max-width: 11ch;
-}
-
-.hero p {
-  max-width: 68ch;
-  font-size: 1rem;
-  line-height: 1.65;
 }
 
 .hero-stats {

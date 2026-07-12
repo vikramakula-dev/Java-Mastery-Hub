@@ -32,7 +32,13 @@ class Dog implements Animal {
 }`,
       output: "Bark",
       explanation: "Defines a contract that implementing classes must fulfill.",
-      selenium: "Understanding how WebDriver defines methods like get() and click()."
+      selenium: "Understanding how WebDriver defines methods like get() and click().",
+      walkthrough: [
+        { code: "interface Animal {\n    void sound();\n}", note: "A pure contract: sound() has NO body here — the interface says WHAT must exist, never HOW. The method is implicitly public abstract even though neither word is written." },
+        { code: "class Dog implements Animal {", note: "'implements' obligates Dog to provide a real body for every abstract method in Animal, or the compiler refuses to build it. That enforcement is the whole value of a contract." },
+        { code: "public void sound() { ... }", note: "The implementation MUST be public — interface methods are implicitly public, and Java forbids narrowing visibility when overriding." },
+        { code: "Animal myDog = new Dog();", note: "Interface-type reference, concrete-class object — the exact shape of 'WebDriver driver = new ChromeDriver()'. Code depending only on Animal never needs to change when a Cat class is added later." }
+      ]
     },
     {
       level: "Beginner",
@@ -49,7 +55,12 @@ class Frog implements Walkable, Swimmable {
 }`,
       output: "Frog walking\nFrog swimming",
       explanation: "A class can implement multiple interfaces, allowing multiple inheritance of type.",
-      selenium: "A custom element wrapper might implement multiple behaviors."
+      selenium: "A custom element wrapper might implement multiple behaviors.",
+      walkthrough: [
+        { code: "interface Walkable { void walk(); }\ninterface Swimmable { void swim(); }", note: "Two independent capability contracts. Neither knows about the other — capabilities compose freely, unlike class inheritance where everything funnels through one parent." },
+        { code: "class Frog implements Walkable, Swimmable {", note: "The comma is the point: a class extends only ONE class, but implements MANY interfaces. This is Java's answer to multiple inheritance — inherit multiple TYPES without the diamond-problem ambiguity of inheriting multiple implementations." },
+        { code: "f.walk(); f.swim();", note: "Frog is usable wherever a Walkable OR a Swimmable is expected — it can be passed to a method taking either type. One object, two contracts fulfilled." }
+      ]
     },
     {
       level: "Intermediate",
@@ -85,7 +96,12 @@ class ConsoleLogger implements Logger {
 }`,
       output: "Info message\nERROR: Failed to find element",
       explanation: "Allows adding new methods to interfaces without breaking implementing classes.",
-      selenium: "Can provide default logging or reporting behavior in test interfaces."
+      selenium: "Can provide default logging or reporting behavior in test interfaces.",
+      walkthrough: [
+        { code: "void log(String msg);", note: "A normal abstract method — every implementer MUST supply this. Adding another one like it to a published interface would break every existing implementing class at compile time." },
+        { code: "default void logError(String msg) { ... }", note: "The Java 8 escape hatch: 'default' lets the interface ship a method WITH a body. Existing implementers inherit it for free instead of breaking — this is exactly how Selenium 4 added methods to WebDriver without breaking every driver." },
+        { code: "cl.logError(\"Failed to find element\");", note: "ConsoleLogger never wrote logError() — it inherited the default body straight from the interface. It could still override it for custom behavior if it wanted." }
+      ]
     },
     {
       level: "Intermediate",

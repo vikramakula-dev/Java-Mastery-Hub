@@ -8,6 +8,15 @@ export const javaIoData = {
     "Not closing streams, which leads to memory leaks and file locks.",
     "Ignoring IOExceptions instead of properly handling or throwing them."
   ],
+  keyPoints: [
+    "Two stream families: InputStream/OutputStream move raw BYTES (images, binaries); Reader/Writer move CHARACTERS (text). Mixing them up is the classic beginner error.",
+    "try-with-resources — try (FileReader fr = ...) — auto-closes anything implementing AutoCloseable, even when an exception is thrown mid-read. It replaced the manual finally-close pattern; always prefer it.",
+    "BufferedReader wraps a Reader and batches disk reads into memory — line-by-line readLine() on large files is dramatically faster than unbuffered character reads.",
+    "new File(path) does NOT create a file on disk — it's just a path representation. exists(), createNewFile(), mkdir() do the actual filesystem work.",
+    "Files.readAllLines() loads the ENTIRE file into memory — fine for small test-data files, dangerous for large logs. Stream line-by-line (BufferedReader or Files.lines()) for big files.",
+    "FileWriter's second constructor argument (true) means APPEND; omitting it silently truncates and overwrites the file — a painful way to lose a log.",
+    "Selenium's daily I/O: reading config.properties (Properties.load), reading CSV test data (BufferedReader + split), and saving failure screenshots (getScreenshotAs + copy)."
+  ],
   examples: [
     { level: "Beginner", title: "Creating a File Object", code: "File file = new File(\"test.txt\");\nSystem.out.println(file.exists());", output: "false (or true if exists)", explanation: "Creates a File object representing the path. Doesn't actually create the file on disk until requested.", selenium: "" },
     { level: "Beginner", title: "Writing to a File", code: "try (FileWriter fw = new FileWriter(\"test.txt\")) {\n    fw.write(\"Hello I/O!\");\n} catch (IOException e) {\n    e.printStackTrace();\n}", output: "", explanation: "Writes a string to a file using FileWriter. The try-with-resources ensures it is closed automatically.", selenium: "" },

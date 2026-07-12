@@ -61,6 +61,19 @@ Introduction · OOPS · Interfaces · Packages · Strings · Wrapper Classes · 
 
 Every module includes: **Overview** (concept, why it exists, real-world analogy, common mistakes, core fundamentals) · **Programs** (worked code examples with line-by-line walkthroughs) · **Challenges** (fill-in-the-blank practice) · **Visual Memory** (stack/heap diagrams) · **Interview** (real-world Q&A) · **Flashcards** · **Notes** · **Mock Interview**.
 
+## Suggested learning path
+
+A 4-week plan for a Java developer preparing for Selenium/SDET interviews:
+
+| Week | Focus | Modules |
+|---|---|---|
+| **1 — Refresh & reframe** | You know Java; learn to narrate it through a QA lens. Read every Interview Q&A even where the code feels easy. | Introduction → OOPS *(slow down here — POM is OOP)* → Interfaces *("WebDriver is an interface" is the #1 opener)* |
+| **2 — The big four** | Where Java-for-Selenium interviews are won or lost. Do all Challenges and flashcards. | Collections Framework → Strings → Exception Handling → Wrapper Classes |
+| **3 — Stand out** | What separates you from other candidates. | Multithreading *(ThreadLocal = parallel tests)* → Design Patterns *(scripts the "design a framework" answer)* → Advanced Java *(Streams, lambdas, Optional)* |
+| **4 — Consolidate** | Build, don't just read. | Capstone Projects *(build Project 1 in a real IDE)* → Mock Interview tracks daily → Flashcards across all modules, 15 min/day |
+
+Skim-only (know the one key fact from each): Packages, Java IO *(properties/CSV reading)*, Nested Classes, Enum & GC *(BrowserType enum)*, Networking *(broken-link checker)*, JVM *(Stack vs Heap)*, AWT *(Robot for uploads — but prefer `sendKeys`)*, Swing.
+
 ## Try it now
 
 **[vikramakula-dev.github.io/Java-Mastery-Hub](https://vikramakula-dev.github.io/Java-Mastery-Hub/)** — no install, runs straight in your browser.

@@ -17,7 +17,14 @@ export const stringsData = {
     "Selenium returns Strings everywhere: getText(), getAttribute(), getCurrentUrl(), getTitle() — assertions on them are string comparisons, so .equals()/.contains() matter daily."
   ],
   examples: [
-    { level: "Beginner", title: "String Literal vs new String()", code: "String s1 = \"Hello\";\nString s2 = new String(\"Hello\");", output: "", explanation: "s1 uses the String pool, s2 creates a new object in the heap memory.", selenium: "" },
+    { level: "Beginner", title: "String Literal vs new String()", code: "String s1 = \"Hello\";\nString s2 = new String(\"Hello\");\nSystem.out.println(s1 == s2);\nSystem.out.println(s1.equals(s2));", output: "false\ntrue", explanation: "s1 uses the String pool, s2 creates a new object in the heap memory.", selenium: "This is exactly why assertions on getText() must use .equals(), never ==.",
+      walkthrough: [
+        { code: "String s1 = \"Hello\";", note: "A literal goes into the String Constant Pool — a shared region where identical literals are stored ONCE. A second literal \"Hello\" elsewhere would reuse this exact object." },
+        { code: "String s2 = new String(\"Hello\");", note: "'new' FORCES a fresh object on the general heap, bypassing the pool — same characters, different object. This is why 'new String(...)' is almost never what you want in real code." },
+        { code: "System.out.println(s1 == s2);", note: "== compares REFERENCES (are these the same object?). Pool object vs heap object → false, despite identical content. Strings returned by getText() behave like s2 — never pool-shared." },
+        { code: "System.out.println(s1.equals(s2));", note: "equals() compares CONTENT character by character → true. The rule that falls out: == asks 'same object?', equals() asks 'same text?' — assertions always want the second question." }
+      ]
+    },
     { level: "Beginner", title: "String Length", code: "String s = \"Java\";\nSystem.out.println(s.length());", output: "4", explanation: "Returns the number of characters in the string.", selenium: "" },
     { level: "Beginner", title: "String Concatenation", code: "String s1 = \"Hello\";\nString s2 = \" World\";\nSystem.out.println(s1 + s2);", output: "Hello World", explanation: "Concatenates two strings using the + operator.", selenium: "" },
     { level: "Intermediate", title: "String equals()", code: "String s1 = \"Java\";\nString s2 = \"Java\";\nSystem.out.println(s1.equals(s2));", output: "true", explanation: "Compares the actual content of the strings, not the memory reference.", selenium: "Used to verify if the actual text of an element matches expected text." },
@@ -27,7 +34,13 @@ export const stringsData = {
     { level: "Advanced", title: "String split()", code: "String s = \"apple,banana,orange\";\nString[] fruits = s.split(\",\");\nSystem.out.println(fruits[1]);", output: "banana", explanation: "Splits a string into an array of strings based on a delimiter.", selenium: "" },
     { level: "Advanced", title: "String replace()", code: "String s = \"I love Java\";\nSystem.out.println(s.replace(\"Java\", \"Selenium\"));", output: "I love Selenium", explanation: "Replaces occurrences of a target string with a replacement string.", selenium: "" },
     { level: "Advanced", title: "String format()", code: "String name = \"John\";\nint age = 30;\nString formatted = String.format(\"My name is %s and I am %d years old.\", name, age);\nSystem.out.println(formatted);", output: "My name is John and I am 30 years old.", explanation: "Creates a formatted string using placeholders.", selenium: "" },
-    { level: "Selenium-Oriented", title: "Extracting dynamic numbers", code: "String text = \"Showing 1 to 10 of 500 entries\";\nString totalStr = text.split(\"of\")[1].replace(\"entries\", \"\").trim();\nint total = Integer.parseInt(totalStr);\nSystem.out.println(total);", output: "500", explanation: "Common pattern to extract total numbers from a pagination text.", selenium: "Extracting specific numbers from web element text to perform assertions." },
+    { level: "Selenium-Oriented", title: "Extracting dynamic numbers", code: "String text = \"Showing 1 to 10 of 500 entries\";\nString totalStr = text.split(\"of\")[1].replace(\"entries\", \"\").trim();\nint total = Integer.parseInt(totalStr);\nSystem.out.println(total);", output: "500", explanation: "Common pattern to extract total numbers from a pagination text.", selenium: "Extracting specific numbers from web element text to perform assertions.",
+      walkthrough: [
+        { code: "text.split(\"of\")", note: "Splits into [\"Showing 1 to 10 \", \" 500 entries\"] — index [1] grabs everything AFTER 'of'. split() takes a regex, so splitting on '.' or '|' would need escaping (\\\\., \\\\|) — a classic gotcha." },
+        { code: ".replace(\"entries\", \"\").trim()", note: "Two-step cleanup: remove the trailing word, then trim() strips the surrounding spaces. Order matters less here, but skipping trim() leaves \" 500 \" and the parse below throws NumberFormatException — invisible whitespace is the #1 cause of 'but it looks right!' parse failures." },
+        { code: "Integer.parseInt(totalStr)", note: "Only NOW is the string pure digits and safe to parse. The full pattern — locate, strip, trim, parse — is the standard recipe for every number you'll ever pull out of UI text." }
+      ]
+    },
     { level: "Selenium-Oriented", title: "Trimming whitespace", code: "String text = \"  Login Successful   \";\nSystem.out.println(text.trim());", output: "Login Successful", explanation: "Removes leading and trailing whitespaces.", selenium: "Cleaning up text retrieved from getText() before asserting, to avoid failures due to invisible spaces." }
   ],
   interview: [

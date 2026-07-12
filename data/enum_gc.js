@@ -5,6 +5,16 @@ export const enumGcData = {
   realWorld: "Environment configs (DEV, QA). Reclaiming memory from old tests.",
   seleniumMapping: "BrowserType enum, cleaning up unused WebDriver objects.",
   commonMistakes: "System.gc() does not guarantee immediate collection.",
+  keyPoints: [
+    "An enum is a fixed, type-safe set of constants — BrowserType.CHROM (typo) fails at COMPILE time, while the string \"chrom\" fails silently at runtime. That's the whole argument for enums over string constants.",
+    "Enum constants are JVM-guaranteed singletons — exactly one CHROME instance ever exists, so comparing enums with == is always safe and correct (unlike Strings or Integers).",
+    "Enums can have fields, constructors, and methods: Environment.QA(\"https://qa.app.com\", 20) bundles each constant with its own config — cleaner and safer than a lookup Map.",
+    "An enum can implement an interface, with each constant supplying its own method body — an elegant, switch-free Factory pattern.",
+    "GC reclaims objects that are UNREACHABLE from any GC root (static fields, live thread stacks). A static WebDriver field is a GC root — the object it points to can never be collected while referenced.",
+    "System.gc() is only a REQUEST — the JVM may ignore it. It cannot fix a real leak, because leaked objects are still reachable; fix the reference, not the collector.",
+    "driver.quit() releases OS/browser resources but does NOT null the Java reference — in thread pools, also call ThreadLocal.remove() or you leak driver objects across reused threads.",
+    "Slow leaks hide in short runs: an ever-growing static cache or unremoved ThreadLocal shows up only in long CI runs or a Grid hub running for days."
+  ],
   examples: [
     { 
       level: "Beginner", 

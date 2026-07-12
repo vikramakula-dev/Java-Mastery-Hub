@@ -5,6 +5,14 @@ export const awtData = {
   realWorld: "Handling native OS file upload windows.",
   seleniumMapping: "Robot class for OS native events.",
   commonMistakes: "Using Robot without delays, leading to missed keystrokes.",
+  keyPoints: [
+    "WebDriver automates the browser DOM only — native OS dialogs (file pickers, auth popups, print dialogs) are separate OS processes it literally cannot see. That gap is why AWT's Robot class matters to testers.",
+    "For file uploads, ALWAYS try sendKeys(filePath) on the <input type='file'> element first — it bypasses the native dialog entirely and works headless. Robot is the fallback, not the default.",
+    "Robot simulates raw OS input: keyPress + keyRelease must BOTH be sent (some dialogs act on release), and coordinates-based mouse actions break with resolution/layout changes.",
+    "Robot needs a real (or virtual) display — it fails on headless CI agents unless a virtual framebuffer (Xvfb) is present. A Robot-dependent suite that passes locally and dies in Jenkins is the classic symptom.",
+    "Robot has no concept of elements or waits — it can't know when a dialog appeared or closed, forcing fragile sleeps. Use it sparingly and only where WebDriver genuinely can't reach.",
+    "AWT components wrap native OS resources ('heavyweight'); Swing draws its own ('lightweight') — that's the AWT vs Swing distinction interviewers occasionally probe."
+  ],
   examples: [
     { 
       level: "Beginner", 

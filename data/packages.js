@@ -8,6 +8,15 @@ export const packagesData = {
     "Leaving instance variables as 'default' (package-private) instead of 'private' in Page Classes.",
     "Importing the wrong class when multiple exist with the same name (e.g., java.util.List vs java.awt.List)."
   ],
+  keyPoints: [
+    "The 4 access levels, narrowest to widest: private (this class only) → default/package-private (same package) → protected (same package + subclasses anywhere) → public (everyone). Know this ordering cold.",
+    "'No modifier' is NOT public — it's package-private. Fields you forget to mark private are silently accessible to every class in the same package.",
+    "protected is the interview trap: it means same-package AND subclasses in OTHER packages. It's exactly what a BasePage's WebDriver field needs when Page Objects live in a different package.",
+    "The package statement must be the first non-comment line of the file, and the folder structure must match it exactly — com.framework.pages means com/framework/pages/.",
+    "Packages create fully-qualified names: two classes named Config can coexist as com.a.Config and com.b.Config. Importing both unqualified in one file is a compile error.",
+    "Classes in the default (unnamed) package cannot be imported by named packages — never ship code without a package declaration.",
+    "Standard Selenium framework layout: pages / tests / utils / config packages — locators private inside pages, tests interact only through public action methods."
+  ],
   examples: [
     {
       level: "Beginner",

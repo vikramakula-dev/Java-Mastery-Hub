@@ -5,6 +5,14 @@ export const nestedClassesData = {
   realWorld: "Configuration properties tied strictly to a specific manager.",
   seleniumMapping: "Page Object Model inner components, custom ExpectedConditions.",
   commonMistakes: "Memory leaks with non-static inner classes keeping outer instance alive.",
+  keyPoints: [
+    "Four kinds: static nested (no outer instance needed), inner/non-static (requires an outer instance), local (defined inside a method), anonymous (declared and instantiated in one expression).",
+    "A non-static inner class instance secretly holds a reference to its outer instance (Outer.this) — that hidden reference is both how it accesses outer fields AND a classic memory-leak source.",
+    "Static nested classes can access the outer class's private STATIC members, but not instance members — there is no outer object to read from.",
+    "The Builder pattern uses a static nested class precisely because the Builder must exist BEFORE any outer instance does — it's constructing one.",
+    "Anonymous classes implement an interface inline: new ExpectedCondition<Boolean>() { ... }. If the interface has exactly one abstract method, a lambda can replace it.",
+    "Nesting is encapsulation at the class level: a private static nested class says 'this type is an implementation detail of its outer class' — nobody else should depend on it."
+  ],
   examples: [
     { 
       level: "Beginner", 

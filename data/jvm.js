@@ -5,6 +5,16 @@ export const jvmData = {
   realWorld: "Allocating 4GB RAM (-Xmx4g) to a Jenkins agent running tests.",
   seleniumMapping: "Preventing OutOfMemoryErrors when handling large data providers or parallel grids.",
   commonMistakes: "Not freeing resources (like driver.quit()), leading to heap exhaustion.",
+  keyPoints: [
+    "Memory map: Stack (per-thread; method frames + local primitives + references), Heap (all objects, shared), Metaspace (class metadata). 'Stack vs Heap?' is a guaranteed interview question.",
+    "Each thread gets its OWN fixed-size stack; all threads SHARE one heap — which is why 20 parallel test threads multiply heap pressure but not stack pressure.",
+    "StackOverflowError = too-deep/infinite recursion exhausting one thread's stack. OutOfMemoryError = heap exhausted. Different memory areas, different fixes.",
+    "-Xmx sets max heap (e.g., -Xmx4g on a Jenkins agent). Raising it can mask a leak longer, not fix it — and bigger heaps mean longer GC pauses.",
+    "The ClassLoader loads .class bytecode at runtime — Class.forName(\"com.pages.LoginPage\") is how frameworks instantiate classes from config strings, and ClassNotFoundException traces back to it.",
+    "Reflection can read/invoke private members at runtime (setAccessible) — powerful for testing legacy internals, but string-based and fragile: renames break it silently with no compile error.",
+    "Shutdown hooks (Runtime.addShutdownHook) run on normal JVM exit — a backstop for driver.quit() — but NOT on force-kill (kill -9), so CI agents still need external cleanup.",
+    "System properties (System.getProperty(\"os.name\")) drive OS-conditional logic — like choosing the right driver binary per platform."
+  ],
   examples: [
     { 
       level: "Beginner", 

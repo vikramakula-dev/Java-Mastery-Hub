@@ -5,6 +5,15 @@ export const networkingData = {
   realWorld: "Fetching REST APIs, downloading server files.",
   seleniumMapping: "Checking broken links (HttpURLConnection), communicating with Grid.",
   commonMistakes: "Forgetting to close connections, ignoring timeouts.",
+  keyPoints: [
+    "URL identifies AND locates a resource (protocol + host + path); URI just identifies. URL is the one you'll actually construct in test code.",
+    "HttpURLConnection is the built-in way to make HTTP calls: openConnection() → setRequestMethod() → getResponseCode(). Java 11+ HttpClient is the modern alternative.",
+    "Use HEAD instead of GET for broken-link checks — you get the status code and headers without downloading the body, making a 50-link sweep dramatically faster.",
+    "ALWAYS set connect and read timeouts (setConnectTimeout/setReadTimeout) — the default can block forever, and one hung endpoint can freeze an entire CI pipeline.",
+    "Status code families: 2xx success, 3xx redirect, 4xx client error (your fault), 5xx server error (their fault). A broken-link checker flags 4xx/5xx.",
+    "SocketTimeoutException = connected but no response in time (slow/hung server); ConnectException = couldn't connect at all (down/wrong port/firewall). They point to different root causes.",
+    "The hybrid pattern interviews love: seed test data via a fast API POST call, then verify through the UI with Selenium — API for setup speed, UI for the actual test."
+  ],
   examples: [
     { 
       level: "Beginner", 

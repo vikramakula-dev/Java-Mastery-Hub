@@ -5,6 +5,14 @@ export const swingData = {
   realWorld: "Data generation tools for manual testers.",
   seleniumMapping: "Building custom execution dashboards.",
   commonMistakes: "Updating GUI outside the Event Dispatch Thread (EDT).",
+  keyPoints: [
+    "Swing is single-threaded by design: ALL component updates must happen on the Event Dispatch Thread (EDT). Touching a JLabel from another thread 'usually works' — until it corrupts rendering intermittently in production.",
+    "Long work (like launching a Selenium suite from a button click) must NOT run on the EDT — it freezes the whole UI until done. Run it on a background thread.",
+    "SwingWorker is the purpose-built bridge: doInBackground() runs off the EDT, done()/process() are automatically called back ON the EDT — no manual thread juggling.",
+    "SwingUtilities.invokeLater(() -> label.setText(...)) is the manual way to hop back onto the EDT from any thread.",
+    "Swing components are 'lightweight' — pure Java objects on the heap, garbage-collected normally, no native handles to dispose (unlike AWT peers).",
+    "QA relevance: Swing is how you build internal test-launcher dashboards — a dropdown of suites + Run button + live progress — for teammates who don't use the command line."
+  ],
   examples: [
     { 
       level: "Beginner", 

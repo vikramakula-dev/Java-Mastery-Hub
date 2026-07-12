@@ -319,9 +319,11 @@ h3, h4, p { margin: 0; }
 .module-link[data-module="AWT"]::before { content: "14"; }
 .module-link[data-module="Swing"]::before { content: "15"; }
 .module-link[data-module="JVM"]::before { content: "16"; }
-.module-link[data-module="Advanced Java"]::before { content: "17"; }
-.module-link[data-module="Design Patterns"]::before { content: "18"; }
-.module-link[data-module="Capstone Projects"]::before { content: "19"; }
+.module-link[data-module="Generics"]::before { content: "17"; }
+.module-link[data-module="Lambdas & Functional Interfaces"]::before { content: "18"; }
+.module-link[data-module="Streams & Optional"]::before { content: "19"; }
+.module-link[data-module="Design Patterns"]::before { content: "20"; }
+.module-link[data-module="Capstone Projects"]::before { content: "21"; }
 
 .module-link.active {
   border-color: rgba(240,180,41,0.28);

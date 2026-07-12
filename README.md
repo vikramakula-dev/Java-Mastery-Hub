@@ -29,9 +29,9 @@ No backend, no account, no tracking — everything runs entirely in your browser
 
 | | |
 |---|---|
-| 📚 **19 structured modules** | From `Introduction` through `JVM` internals, plus dedicated **Advanced Java**, **Design Patterns**, and **Capstone Projects** modules |
-| 💡 **159 real-world interview questions** | Scenario-based, not definition recall — *"your parallel suite works with 2 threads but fails with 8, why?"* instead of *"what is a thread?"* |
-| 🧩 **53 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
+| 📚 **21 structured modules** | From `Introduction` through `JVM` internals, plus dedicated **Generics**, **Lambdas & Functional Interfaces**, **Streams & Optional**, **Design Patterns**, and **Capstone Projects** modules |
+| 💡 **173 real-world interview questions** | Scenario-based, not definition recall — *"your parallel suite works with 2 threads but fails with 8, why?"* instead of *"what is a thread?"* |
+| 🧩 **58 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
 | 🃏 **Flashcards** | Auto-generated from each module's interview questions, with flip and next-card navigation |
 | 📝 **Notes** | Freeform per-topic notes with `#tag` highlighting, saved locally |
 | 🎯 **Mock interviews** | A dedicated Selenium interview question bank (locators, waits, Shadow DOM, relative locators, and more) |
@@ -51,9 +51,11 @@ Introduction · OOPS · Interfaces · Packages · Strings · Wrapper Classes · 
 </details>
 
 <details>
-<summary><strong>Beyond the basics (3 modules)</strong></summary>
+<summary><strong>Beyond the basics (5 modules)</strong></summary>
 
-- **Advanced Java** — Generics, Lambdas & Functional Interfaces, the Streams API, `Optional`, method references
+- **Generics** — type parameters, generic methods, bounded types, wildcards, type erasure
+- **Lambdas & Functional Interfaces** — the big four (`Supplier`/`Consumer`/`Function`/`Predicate`), all four method-reference forms, custom wait conditions
+- **Streams & Optional** — lazy pipelines, `map`/`filter`/`collect`, terminal-operation choice, `Optional` as API design
 - **Design Patterns** — Singleton (with `ThreadLocal`), Factory, Builder, and Page Object Model, each mapped directly to real Selenium framework code
 - **Capstone Projects** — build a Mini POM framework, a Test Data Manager, and a parallel cross-browser test runner, milestone by milestone
 
@@ -69,7 +71,7 @@ A 4-week plan for a Java developer preparing for Selenium/SDET interviews:
 |---|---|---|
 | **1 — Refresh & reframe** | You know Java; learn to narrate it through a QA lens. Read every Interview Q&A even where the code feels easy. | Introduction → OOPS *(slow down here — POM is OOP)* → Interfaces *("WebDriver is an interface" is the #1 opener)* |
 | **2 — The big four** | Where Java-for-Selenium interviews are won or lost. Do all Challenges and flashcards. | Collections Framework → Strings → Exception Handling → Wrapper Classes |
-| **3 — Stand out** | What separates you from other candidates. | Multithreading *(ThreadLocal = parallel tests)* → Design Patterns *(scripts the "design a framework" answer)* → Advanced Java *(Streams, lambdas, Optional)* |
+| **3 — Stand out** | What separates you from other candidates. | Multithreading *(ThreadLocal = parallel tests)* → Design Patterns *(scripts the "design a framework" answer)* → Lambdas & Functional Interfaces → Streams & Optional → Generics |
 | **4 — Consolidate** | Build, don't just read. | Capstone Projects *(build Project 1 in a real IDE)* → Mock Interview tracks daily → Flashcards across all modules, 15 min/day |
 
 Skim-only (know the one key fact from each): Packages, Java IO *(properties/CSV reading)*, Nested Classes, Enum & GC *(BrowserType enum)*, Networking *(broken-link checker)*, JVM *(Stack vs Heap)*, AWT *(Robot for uploads — but prefer `sendKeys`)*, Swing.

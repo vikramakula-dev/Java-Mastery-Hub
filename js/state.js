@@ -3,7 +3,8 @@ export const modulesList = [
   "Wrapper Classes", "Java IO", "Exception Handling",
   "Multithreading", "Nested Classes", "Enum & Garbage Collection",
   "Collections Framework", "Java Networking", "AWT", "Swing", "JVM",
-  "Advanced Java", "Design Patterns", "Capstone Projects"
+  "Generics", "Lambdas & Functional Interfaces", "Streams & Optional",
+  "Design Patterns", "Capstone Projects"
 ];
 
 export const moduleFileMap = {
@@ -23,7 +24,9 @@ export const moduleFileMap = {
   "AWT": "awt",
   "Swing": "swing",
   "JVM": "jvm",
-  "Advanced Java": "advanced_java",
+  "Generics": "generics",
+  "Lambdas & Functional Interfaces": "lambdas_functional",
+  "Streams & Optional": "streams_optional",
   "Design Patterns": "design_patterns",
   "Capstone Projects": "capstone_projects"
 };

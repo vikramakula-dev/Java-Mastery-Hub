@@ -102,6 +102,7 @@ export async function renderQuiz() {
       "OOPS": "frameworks",
       "Interfaces": "frameworks",
       "Multithreading": "frameworks",
+      "TestNG": "frameworks",
       "Design Patterns": "frameworks",
       "Capstone Projects": "frameworks"
     };

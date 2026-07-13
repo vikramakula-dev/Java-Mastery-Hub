@@ -4,6 +4,7 @@ export const modulesList = [
   "Multithreading", "Nested Classes", "Enum & Garbage Collection",
   "Collections Framework", "Java Networking", "AWT", "Swing", "JVM",
   "Generics", "Lambdas & Functional Interfaces", "Streams & Optional",
+  "Coding Problems", "TestNG", "Selenium WebDriver",
   "Design Patterns", "Capstone Projects"
 ];
 
@@ -27,6 +28,9 @@ export const moduleFileMap = {
   "Generics": "generics",
   "Lambdas & Functional Interfaces": "lambdas_functional",
   "Streams & Optional": "streams_optional",
+  "Coding Problems": "coding_problems",
+  "TestNG": "testng",
+  "Selenium WebDriver": "selenium_webdriver",
   "Design Patterns": "design_patterns",
   "Capstone Projects": "capstone_projects"
 };

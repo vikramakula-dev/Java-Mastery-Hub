@@ -95,14 +95,21 @@ export async function renderQuiz() {
 
     qSelect.onchange = (e) => renderTrack(mockInterviews.tracks.find(t => t.id === e.target.value));
 
-    // Auto-load the first track so the tab is never an empty pane waiting on
-    // dropdown discovery — users can switch tracks from the select at any time.
-    if (!qSelect.value || !mockInterviews.tracks.some(t => t.id === qSelect.value)) {
-      const first = mockInterviews.tracks[0];
-      if (first) {
-        qSelect.value = first.id;
-        renderTrack(first);
-      }
+    // Auto-load the track most relevant to the CURRENT module, so the tab opens
+    // with matching content immediately — users can still switch tracks any time.
+    const TRACK_FOR_MODULE = {
+      "Exception Handling": "exceptions",
+      "OOPS": "frameworks",
+      "Interfaces": "frameworks",
+      "Multithreading": "frameworks",
+      "Design Patterns": "frameworks",
+      "Capstone Projects": "frameworks"
+    };
+    const preferredId = TRACK_FOR_MODULE[state.module] || "locators";
+    const preferred = mockInterviews.tracks.find(t => t.id === preferredId) || mockInterviews.tracks[0];
+    if (preferred) {
+      qSelect.value = preferred.id;
+      renderTrack(preferred);
     }
   } catch (e) {
     console.error("Failed to load mock interviews:", e);

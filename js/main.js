@@ -229,6 +229,17 @@ init().catch(err => console.error("App failed to initialize:", err));
 // Offline support + desktop installability (PWA). Skipped in dev so the
 // service worker cache never fights vite's hot module reloading.
 if (import.meta.env.PROD && "serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  // If a NEW service worker takes control of an already-open page, reload once
+  // so the user sees the new version immediately instead of on the next visit.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (hadController && !reloaded) {
+      reloaded = true;
+      location.reload();
+    }
+  });
+
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(err =>
       console.warn("Service worker registration failed:", err)

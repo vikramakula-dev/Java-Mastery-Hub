@@ -75,14 +75,13 @@ export async function renderQuiz() {
         mockInterviews.tracks.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.title)}</option>`).join("");
     }
 
-    qSelect.onchange = (e) => {
-      const track = mockInterviews.tracks.find(t => t.id === e.target.value);
+    const renderTrack = (track) => {
       if (!track) {
         area.innerHTML = "<p>Select a track to begin.</p>";
         return;
       }
       area.innerHTML = `
-        <h4 style="color:var(--accent);">${escapeHtml(track.title)} Interview</h4>
+        <h4 style="color:var(--accent);">${escapeHtml(track.title)} Interview <span style="color:var(--muted); font-weight:400; font-size:0.85rem;">(${track.questions.length} questions — tap each to reveal the answer)</span></h4>
         <div class="accordion">
           ${track.questions.map(q => `
             <details class="accordion-item">
@@ -94,8 +93,16 @@ export async function renderQuiz() {
       `;
     };
 
-    if (!qSelect.value) {
-      area.innerHTML = `<p style="color:var(--muted);">Select a track from the dropdown to load a mock interview.</p>`;
+    qSelect.onchange = (e) => renderTrack(mockInterviews.tracks.find(t => t.id === e.target.value));
+
+    // Auto-load the first track so the tab is never an empty pane waiting on
+    // dropdown discovery — users can switch tracks from the select at any time.
+    if (!qSelect.value || !mockInterviews.tracks.some(t => t.id === qSelect.value)) {
+      const first = mockInterviews.tracks[0];
+      if (first) {
+        qSelect.value = first.id;
+        renderTrack(first);
+      }
     }
   } catch (e) {
     console.error("Failed to load mock interviews:", e);

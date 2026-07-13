@@ -57,10 +57,76 @@ public class UserServiceTest {
       output: "Test Passed",
       explanation: "A unit test isolating UserService by mocking UserRepository.",
       walkthrough: [
-        { code: "@Mock", note: "Creates a fake UserRepository so we don't hit a real database." },
-        { code: "@InjectMocks", note: "Creates the real UserService and injects the fake UserRepository into it." },
-        { code: "when(...).thenReturn(...)", note: "Instructs the mock how to behave when a specific method is called." },
-        { code: "verify(...)", note: "Checks that the mocked method was actually called during the test." }
+        { code: "@Mock private UserRepository userRepository;", note: "A scripted fake of the DEPENDENCY — no database, no I/O, fully controlled. The rule: mock collaborators, never the class under test itself." },
+        { code: "@InjectMocks private UserService userService;", note: "The REAL class under test, constructed with the mocks injected — its actual logic runs against controlled inputs. This pairing is the whole isolation architecture in two annotations." },
+        { code: "when(userRepository.findById(1L)).thenReturn(mockUser);", note: "The Arrange step: scripts the mock's response. This is input-feeding, not asserting — a distinction interviewers probe with 'is when() an assertion?' (no)." },
+        { code: "verify(userRepository, times(1)).findById(1L);", note: "The interaction assertion: proves the service actually consulted its repository, exactly once. Use verify for side-effect contracts; use assertEquals for return values." }
+      ]
+    },
+    {
+      level: "Beginner",
+      title: "JUnit 5 Lifecycle + Core Assertions",
+      code: `import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PriceParserTest {
+    private PriceParser parser;
+
+    @BeforeEach
+    void setUp() { parser = new PriceParser(); }   // fresh instance per test
+
+    @Test
+    @DisplayName("parses currency-formatted price")
+    void parsesDollarPrice() {
+        assertEquals(1234.99, parser.parse("$1,234.99"), 0.001);
+    }
+
+    @Test
+    void rejectsGarbageInput() {
+        NumberFormatException ex = assertThrows(
+            NumberFormatException.class, () -> parser.parse("not-a-price"));
+        assertTrue(ex.getMessage().contains("not-a-price"));
+    }
+
+    @AfterEach
+    void tearDown() { /* release resources if any */ }
+}`,
+      output: "2 tests passed: 'parses currency-formatted price', 'rejectsGarbageInput'",
+      explanation: "The JUnit 5 shape: @BeforeEach gives every test a fresh fixture, assertions state expectations, assertThrows makes exception paths first-class tests.",
+      selenium: "This is the millisecond-fast safety net for your framework's own utilities — when a Selenium test fails, a green PriceParserTest instantly eliminates one suspect.",
+      walkthrough: [
+        { code: "@BeforeEach void setUp()", note: "Runs before EVERY @Test — the TestNG @BeforeMethod equivalent (JUnit names map: @BeforeAll≈@BeforeClass, @AfterEach≈@AfterMethod). Fresh state per test means no ordering dependencies." },
+        { code: "assertEquals(1234.99, parser.parse(...), 0.001)", note: "JUnit's argument order is (expected, actual) — the REVERSE of TestNG's (actual, expected). Mixing the conventions produces backwards failure messages; knowing both orders is a real cross-framework tell. The third argument is the floating-point tolerance." },
+        { code: "assertThrows(NumberFormatException.class, () -> ...)", note: "Fails unless the lambda throws exactly that type, and RETURNS the exception for message assertions — the error path becomes a first-class, precise test instead of a try/fail/catch contraption." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "@ParameterizedTest — JUnit's DataProvider",
+      code: `import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class EmailValidatorTest {
+
+    @ParameterizedTest(name = "{0} -> valid={1}")
+    @CsvSource({
+        "qa@example.com,      true",
+        "no-at-sign.com,      false",
+        "'',                  false",
+        "spaces in@mail.com,  false"
+    })
+    void validatesEmails(String input, boolean expected) {
+        assertEquals(expected, EmailValidator.isValid(input));
+    }
+}`,
+      output: "4 invocations: qa@example.com -> valid=true (pass), no-at-sign.com -> valid=false (pass), ...",
+      explanation: "One test method, four invocations — each CSV row becomes arguments, and the name template makes every row self-describing in reports.",
+      selenium: "The JUnit twin of TestNG's @DataProvider: same data-driven idea, inline table syntax — ideal for hammering a framework utility with boundary cases.",
+      walkthrough: [
+        { code: "@ParameterizedTest(name = \"{0} -> valid={1}\")", note: "Replaces @Test for data-driven methods. The name template injects the arguments into each invocation's report line — failures read as 'no-at-sign.com -> valid=false FAILED', no debugging needed to know which row." },
+        { code: "@CsvSource({ \"qa@example.com, true\", ... })", note: "Each string is one invocation's arguments, comma-split and type-converted to the parameter list (String, boolean). Note '' for empty string. Siblings: @ValueSource for single args, @MethodSource for programmatic data — the DataProvider equivalent." },
+        { code: "void validatesEmails(String input, boolean expected)", note: "Parameters arrive by position, exactly like TestNG's DataProvider rows — and the truth-table format makes missing edge cases visually obvious (where's the null row? add one with @NullSource)." }
       ]
     }
   ],

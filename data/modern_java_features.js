@@ -87,7 +87,87 @@ public class RecordExample {
       output: "N/A",
       explanation: "Combines testing if an object is of a specific type with casting it to a new variable.",
       walkthrough: [
-        { code: "instanceof String s", note: "If obj is a String, it is automatically cast and bound to the variable 's' in the scope of the if block." }
+        { code: "instanceof String s", note: "If obj is a String, it is automatically cast and bound to the variable 's' in the scope of the if block — the old test-then-cast two-liner (and its ClassCastException risk when they drift apart) collapses into one step." }
+      ]
+    },
+    {
+      level: "Beginner",
+      title: "var — Inference, Not Dynamic Typing",
+      code: `import java.util.*;
+
+public class VarDemo {
+    public static void main(String[] args) {
+        var browser = "chrome";              // inferred: String
+        var timeout = 30;                    // inferred: int
+        var handles = new HashSet<String>(); // inferred: HashSet<String>
+
+        // browser = 42;  // COMPILE ERROR — the type was locked at declaration
+
+        System.out.println(browser.toUpperCase() + " / " + (timeout + 5));
+    }
+}`,
+      output: "CHROME / 35",
+      explanation: "The compiler reads the initializer once and fixes the type forever — all of the checking, less of the typing.",
+      selenium: "var wait = new WebDriverWait(driver, Duration.ofSeconds(10)); — the right side already states the type; var stops you writing it twice.",
+      walkthrough: [
+        { code: "var browser = \"chrome\";", note: "Inferred as String at COMPILE time — this is not JavaScript's var. Every method call is still checked; browser.push() won't compile. 'Is var dynamic typing?' is the exact trap question, and this line is the counter-example." },
+        { code: "var handles = new HashSet<String>();", note: "Where var earns its keep: the type appears once instead of twice. Nuance worth knowing: the inferred type is HashSet, not the Set interface — if you want the interface as the variable's type, declare it explicitly." },
+        { code: "// browser = 42;", note: "Proof of static typing: reassigning a different type is a compile error. var removes the WRITTEN type, never the type itself — locals-only, initializer required." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "Switch Expressions — the Browser Factory, Cleaned Up",
+      code: `public class SwitchExpr {
+    enum Browser { CHROME, FIREFOX, EDGE }
+
+    static String driverFor(Browser b) {
+        return switch (b) {
+            case CHROME  -> "chromedriver";
+            case FIREFOX -> "geckodriver";
+            case EDGE    -> "msedgedriver";
+        };
+    }
+
+    public static void main(String[] args) {
+        System.out.println(driverFor(Browser.FIREFOX));
+    }
+}`,
+      output: "geckodriver",
+      explanation: "The switch IS the value: arrows instead of break, fall-through impossible, and the compiler refuses to build if an enum constant is unhandled.",
+      selenium: "The DriverFactory from Design Patterns, modernized — add SAFARI to the enum and every switch over Browser fails to compile until handled. The compiler becomes your cross-browser checklist.",
+      walkthrough: [
+        { code: "return switch (b) {", note: "A switch that RETURNS — the whole construct evaluates to a value, so no mutable temp variable and no break statements anywhere." },
+        { code: "case CHROME  -> \"chromedriver\";", note: "Arrow form: match, produce value, done. The forgotten-break fall-through — the old switch's classic bug — is structurally impossible. Multi-statement branches use a block with yield." },
+        { code: "// no default needed", note: "The switch covers every enum constant, so the compiler proves exhaustiveness — and when someone adds Browser.SAFARI later, THIS code stops compiling until it's handled. Exhaustiveness-as-refactoring-safety is the interview-grade insight." }
+      ]
+    },
+    {
+      level: "Selenium-Oriented",
+      title: "Immutable Collections + New String Helpers",
+      code: `import java.util.*;
+
+public class FactoriesAndStrings {
+    public static void main(String[] args) {
+        List<String> browsers = List.of("chrome", "firefox", "edge");
+        // browsers.add("safari");  // UnsupportedOperationException — immutable!
+
+        Map<String, Integer> timeouts = Map.of("page", 30, "element", 10);
+        System.out.println(browsers + " / element timeout: " + timeouts.get("element"));
+
+        String scraped = "   ";
+        System.out.println("isEmpty: " + scraped.isEmpty());   // false — 3 chars!
+        System.out.println("isBlank: " + scraped.isBlank());   // true — whitespace-only
+        System.out.println("-".repeat(20));
+    }
+}`,
+      output: "[chrome, firefox, edge] / element timeout: 10\nisEmpty: false\nisBlank: true\n--------------------",
+      explanation: "One-line immutable collections for shared fixed data, and the String helpers that answer questions scraped text actually raises.",
+      selenium: "List.of holds your expected dropdown options safely shareable across parallel tests; isBlank() is the correct 'is this field effectively empty' check that isEmpty() gets wrong on whitespace.",
+      walkthrough: [
+        { code: "List.of(\"chrome\", \"firefox\", \"edge\")", note: "Immutable by construction — add/remove throws UnsupportedOperationException, nulls are rejected outright. Immutable means thread-safe to share across parallel tests with zero synchronization, and no test can corrupt another's expected values." },
+        { code: "scraped.isEmpty() vs scraped.isBlank()", note: "isEmpty asks 'zero characters?' — three spaces fail that. isBlank asks 'nothing meaningful?' — the question a scraped getText() check almost always intends. Choosing the wrong one is a real flaky-assertion source." },
+        { code: "\"-\".repeat(20)", note: "Padding and separators without loops. Small, but using lines()/strip()/repeat() naturally in code reviews reads as current-Java fluency." }
       ]
     }
   ],

@@ -31,7 +31,7 @@ No backend, no account, no tracking — everything runs entirely in your browser
 |---|---|
 | 📚 **32 structured modules** | Core Java through `JVM` internals, modern Java, the backend ecosystem (**Maven**, **JDBC**, **Hibernate**, **Spring Boot**, **REST APIs**, **Logging**, **JUnit & Mockito**), and the full SDET toolkit: **Coding Problems**, **TestNG**, **Selenium WebDriver**, **Design Patterns**, **Capstone Projects** |
 | 💡 **243 real-world interview questions** | Scenario-based, not definition recall — *"your parallel suite works with 2 threads but fails with 8, why?"* instead of *"what is a thread?"* |
-| 🧩 **89 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
+| 🧩 **91 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
 | 🃏 **Flashcards** | Auto-generated from each module's interview questions, with flip and next-card navigation |
 | 📝 **Notes** | Freeform per-topic notes with `#tag` highlighting, saved locally |
 | 🎯 **Mock interviews** | A dedicated Selenium interview question bank (locators, waits, Shadow DOM, relative locators, and more) |

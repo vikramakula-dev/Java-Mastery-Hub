@@ -48,9 +48,76 @@ public class PaymentService {
       output: "N/A (Output depends on logging configuration)",
       explanation: "Using SLF4J to log messages at different severity levels.",
       walkthrough: [
-        { code: "LoggerFactory.getLogger(...)", note: "Instantiates the logger for the specific class." },
-        { code: "logger.info(...) ", note: "Logs general informational messages." },
-        { code: "logger.error(..., e)", note: "Logs the error message along with the full stack trace of the exception." }
+        { code: "LoggerFactory.getLogger(PaymentService.class)", note: "One logger per class, named after it — every output line then carries its origin for free, and per-package level control (this package at DEBUG, the rest at INFO) becomes possible." },
+        { code: "logger.info(\"Starting payment process for user: {}\", userId)", note: "The {} placeholder is formatted ONLY if INFO is enabled — string concatenation with + would build the message every time, even when silenced. Lazy formatting is the professional tell." },
+        { code: "logger.error(\"Payment failed for user: {}\", userId, e)", note: "The exception rides as the LAST argument — that's what prints the full stack trace. Folding e.getMessage() into the text loses the trace, which is the difference between finding the bug and guessing." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "logback.xml — Pattern, File, and Levels",
+      code: `<!-- src/test/resources/logback.xml -->
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>target/test-run.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %X{test} %-5level %logger{20} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.myframework.pages" level="DEBUG" />
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>`,
+      output: "14:02:31.204 [TestNG-3] loginTest DEBUG c.m.pages.LoginPage - Clicking loginButton",
+      explanation: "One XML file controls where logs go (console + file), what each line carries (time, thread, level, class), and which packages get extra detail.",
+      selenium: "The [%thread] and %X{test} fields are what make parallel-run logs readable — every line self-identifies its thread AND its test.",
+      walkthrough: [
+        { code: "<pattern>%d{...} [%thread] %-5level %logger{20} - %msg%n</pattern>", note: "Each token adds context: timestamp, thread name (the parallel-suite untangler), padded level, abbreviated class, message. This one line is why logger output beats println forever." },
+        { code: "%X{test}", note: "Reads the MDC — put the test name in during @BeforeMethod (MDC.put(\"test\", result.getName())) and EVERY line from anywhere in the stack carries which test produced it. Thread tells you where, MDC tells you what." },
+        { code: "<logger name=\"com.myframework.pages\" level=\"DEBUG\" />", note: "Per-package levels: page-object actions at DEBUG detail while the rest stays at INFO — flip this line during a bug hunt with no recompile. This runtime dial is the whole point of levels." }
+      ]
+    },
+    {
+      level: "Selenium-Oriented",
+      title: "Logging Woven into BasePage and the Listener",
+      code: `public abstract class BasePage {
+    private static final Logger log = LoggerFactory.getLogger(BasePage.class);
+    protected WebDriver driver;
+
+    protected void click(By locator, String name) {
+        log.debug("Clicking '{}' [{}]", name, locator);
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+            .until(ExpectedConditions.elementToBeClickable(locator))
+            .click();
+        log.debug("Clicked '{}'", name);
+    }
+}
+
+public class TestListener implements ITestListener {
+    private static final Logger log = LoggerFactory.getLogger(TestListener.class);
+
+    @Override public void onTestStart(ITestResult r)   { log.info(">>> START {}", r.getName()); }
+    @Override public void onTestSuccess(ITestResult r) { log.info("<<< PASS  {}", r.getName()); }
+    @Override public void onTestFailure(ITestResult r) {
+        log.error("<<< FAIL  {}", r.getName(), r.getThrowable());
+    }
+}`,
+      output: ">>> START checkoutTest\nClicking 'Add to cart' [By.id: add-btn]\n<<< FAIL  checkoutTest  (with full stack trace)",
+      explanation: "Actions logged once in BasePage helpers, lifecycle logged once in the listener — tests themselves stay clean while every run writes its own story.",
+      selenium: "When the 3am CI failure lands, this log reads as a narrative: which test, which page actions in order, and the exact exception — the difference between a 5-minute and a 2-hour diagnosis.",
+      walkthrough: [
+        { code: "log.debug(\"Clicking '{}' [{}]\", name, locator)", note: "Logged in the ONE method all clicks flow through — every test inherits action logging with zero per-test effort. The human-readable name plus the locator gives both the story and the technical detail." },
+        { code: "onTestFailure: log.error(..., r.getThrowable())", note: "The listener catches the failure event centrally — message plus full stack trace (throwable as last argument), right next to where the screenshot listener fires. Cross-cutting concerns live in one place." },
+        { code: "log.info(\">>> START {}\", r.getName())", note: "Start/end markers turn a wall of interleaved lines into scannable blocks — grep the test name and the whole story of that one test falls out, even from a 4-thread parallel run." }
       ]
     }
   ],

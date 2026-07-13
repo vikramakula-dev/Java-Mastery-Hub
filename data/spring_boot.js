@@ -44,9 +44,72 @@ public class HelloWorldApplication {
       output: "Hello, Spring Boot! (when visiting localhost:8080/hello)",
       explanation: "A complete, runnable web application in a single file.",
       walkthrough: [
-        { code: "@SpringBootApplication", note: "A convenience annotation that adds @Configuration, @EnableAutoConfiguration, and @ComponentScan." },
-        { code: "@RestController", note: "Marks the class as a web controller returning data rather than a view." },
-        { code: "@GetMapping(\"/hello\")", note: "Maps HTTP GET requests to /hello to the sayHello method." }
+        { code: "@SpringBootApplication", note: "Three annotations in one: @Configuration (this class defines beans), @EnableAutoConfiguration (set up infrastructure from the classpath), @ComponentScan (find components in this package and below). One line boots the machine." },
+        { code: "@RestController", note: "@Controller + @ResponseBody: return values serialize straight to JSON instead of resolving an HTML view — the annotation for APIs and test stubs alike." },
+        { code: "SpringApplication.run(...)", note: "Builds the IoC container, wires every dependency, starts embedded Tomcat — which is why the entire app is one 'java -jar' command CI can manage as a single process." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "Dependency Injection — Constructor Style",
+      code: `import org.springframework.stereotype.*;
+
+@Service
+class UserService {
+    public String findName(long id) { return "Priya"; }
+}
+
+@RestController
+class UserController {
+    private final UserService userService;
+
+    // Spring sees the constructor parameter and supplies the bean:
+    UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/users/{id}/name")
+    String name(@PathVariable long id) {
+        return userService.findName(id);
+    }
+}`,
+      output: "GET /users/7/name  ->  Priya",
+      explanation: "The controller never writes 'new UserService()' — it declares what it NEEDS in the constructor and the container injects it. Loose coupling, swappable implementations, trivially mockable.",
+      selenium: "The exact pattern your Page Objects already use — LoginPage(WebDriver driver) — industrialized: declaring dependencies instead of constructing them is what makes both frameworks testable.",
+      walkthrough: [
+        { code: "@Service", note: "Marks the class as a container-managed bean (a specialization of @Component). Component scanning finds it at startup and keeps one instance ready to inject — Spring beans are singletons by default." },
+        { code: "UserController(UserService userService)", note: "Constructor injection — the recommended style over field @Autowired: dependencies are explicit, final, and the class is constructible in a plain JUnit test by passing a Mockito mock. DI and testability are the same feature." },
+        { code: "@PathVariable long id", note: "Binds the {id} segment of the URL into the parameter, type-converted. The web layer's job is exactly this translation; the logic lives in the injected service." }
+      ]
+    },
+    {
+      level: "Selenium-Oriented",
+      title: "Health-Gate Your Suite with Actuator",
+      code: `// Poll /actuator/health before starting the Selenium suite:
+public static void waitForAppUp(String baseUrl, int timeoutSec) throws Exception {
+    long deadline = System.currentTimeMillis() + timeoutSec * 1000L;
+    while (System.currentTimeMillis() < deadline) {
+        try {
+            HttpURLConnection c = (HttpURLConnection)
+                new URL(baseUrl + "/actuator/health").openConnection();
+            c.setConnectTimeout(2000);
+            c.setReadTimeout(2000);
+            if (c.getResponseCode() == 200) {
+                System.out.println("App is UP — starting suite");
+                return;
+            }
+        } catch (Exception ignored) { /* not up yet */ }
+        Thread.sleep(2000);
+    }
+    throw new IllegalStateException("App not healthy after " + timeoutSec + "s — aborting suite");
+}`,
+      output: "App is UP — starting suite",
+      explanation: "A bounded poll against Spring Boot's free health endpoint — the suite either starts against a live app or fails fast with ONE clear infrastructure message.",
+      selenium: "Kills the worst failure mode in CI: 40 Selenium tests all failing with connection errors because the deploy wasn't finished — replaced by a single honest 'app never came up'.",
+      walkthrough: [
+        { code: "new URL(baseUrl + \"/actuator/health\")", note: "Actuator ships this endpoint for free — 200 with {\"status\":\"UP\"} when the app and its dependencies (DB, queues) are ready. It's the app's own self-assessment, better than pinging the login page." },
+        { code: "c.setConnectTimeout(2000); c.setReadTimeout(2000);", note: "The Networking module's rule applied: never poll with unbounded connections — each attempt fails fast, keeping the loop responsive." },
+        { code: "throw new IllegalStateException(...)", note: "Failing the RUN here, before any test starts, converts 40 misleading red tests into one accurate message. This is a @BeforeSuite method in practice." }
       ]
     }
   ],
@@ -83,6 +146,16 @@ public class StubController {
 }`,
       blanks: [{ label: "controller annotation with automatic body serialization", answer: ["@RestController"] }],
       explanation: "@RestController (= @Controller + @ResponseBody) serializes return values straight into the HTTP response — exactly what an API endpoint or test stub needs; plain @Controller would try to resolve an HTML view."
+    },
+    {
+      title: "Declare, don't construct",
+      prompt: "Fill in the annotation that makes this class a container-managed bean Spring can inject elsewhere.",
+      code: `___1___
+public class UserService {
+    public String findName(long id) { return "Priya"; }
+}`,
+      blanks: [{ label: "stereotype annotation for a service bean", answer: ["@Service", "@Component"] }],
+      explanation: "@Service (a specialization of @Component) registers the class with the IoC container during component scanning — after which any constructor that declares a UserService parameter receives the shared instance automatically."
     }
   ]
 };

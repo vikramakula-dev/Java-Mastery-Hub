@@ -48,10 +48,74 @@ public class UserController {
       output: "N/A (API Endpoints)",
       explanation: "A standard REST controller handling GET and POST requests.",
       walkthrough: [
-        { code: "@RequestMapping(\"/api/users\")", note: "Sets the base URL for all endpoints in this controller." },
+        { code: "@RequestMapping(\"/api/users\")", note: "Sets the base URL for all endpoints in this controller — resources are NOUNS; the HTTP method supplies the verb." },
         { code: "@PathVariable", note: "Extracts values from the URL path (e.g., the id in /api/users/1)." },
         { code: "@RequestBody", note: "Deserializes the incoming JSON request body into a Java object." },
-        { code: "ResponseEntity", note: "Allows fine-grained control over the HTTP response, including status codes." }
+        { code: "ResponseEntity.status(201).body(savedUser)", note: "201 Created — not a generic 200 — is the correct creation response, and precisely what your API test should assert." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "RestAssured GET — Status, Then Fields",
+      code: `import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+public class GetUserTest {
+    @Test
+    public void userEndpointReturnsCorrectData() {
+        given()
+            .baseUri("https://reqres.in")
+            .header("Accept", "application/json")
+        .when()
+            .get("/api/users/2")
+        .then()
+            .statusCode(200)
+            .body("data.id", equalTo(2))
+            .body("data.email", containsString("@reqres.in"))
+            .body("data.first_name", not(emptyString()));
+    }
+}`,
+      output: "Test passes: 200 OK with all three field assertions green",
+      explanation: "The given/when/then chain: arrange the request, fire the verb, assert status first and then drill into the JSON with dot-paths.",
+      selenium: "The API sibling of a Selenium assertion — same Arrange-Act-Assert shape, no browser: this is the test you write for the backend half of a hybrid suite.",
+      walkthrough: [
+        { code: "given().baseUri(...).header(...)", note: "The Arrange stage: base URL, headers, auth tokens, query params, request body — everything about the request EXCEPT sending it." },
+        { code: ".when().get(\"/api/users/2\")", note: "The Act stage: verb + path fires the actual HTTP call. Swap .get for .post/.put/.delete — the chain shape never changes." },
+        { code: ".then().statusCode(200).body(\"data.id\", equalTo(2))", note: "Assert the status BEFORE the body — a 500 makes body assertions meaningless noise. JSON dot-paths walk nesting; Hamcrest matchers (equalTo, containsString, hasItem) express the condition." }
+      ]
+    },
+    {
+      level: "Selenium-Oriented",
+      title: "POST, Extract the ID, Round-Trip Verify",
+      code: `String payload = """
+    { "name": "qa-user", "job": "sdet" }""";
+
+// Create, and capture the generated id:
+String id =
+    given()
+        .baseUri("https://reqres.in")
+        .contentType("application/json")
+        .body(payload)
+    .when()
+        .post("/api/users")
+    .then()
+        .statusCode(201)
+        .body("name", equalTo("qa-user"))
+        .extract().path("id");
+
+System.out.println("Created id: " + id);
+
+// The hybrid pattern from here:
+// 1. This POST seeded the data (fast, deterministic)
+// 2. Selenium drives the UI as that user (what customers see)
+// 3. A final GET /api/users/{id} verifies resulting state`,
+      output: "Created id: 981",
+      explanation: "extract().path() pulls values out of the response for follow-up calls — the create → capture → verify chain every data-driven API test needs.",
+      selenium: "This is 'use the API to ARRANGE state' made concrete: seconds of setup instead of minutes of UI clicking, then Selenium tests only what genuinely needs a browser.",
+      walkthrough: [
+        { code: "String payload = \"\"\" ... \"\"\";", note: "A text block (Modern Java module) holding the JSON — readable, no escape characters, exactly the pairing these two modules were designed for." },
+        { code: ".extract().path(\"id\")", note: "After assertions pass, extract() switches the chain from asserting to HARVESTING — path(\"id\") pulls the generated id for the next request. Chaining calls through extracted values is the backbone of API test flows." },
+        { code: ".statusCode(201).body(\"name\", equalTo(\"qa-user\"))", note: "Assert BEFORE extracting: if creation failed, you want the clear 201-mismatch failure here — not a null id producing a confusing error three calls later." }
       ]
     }
   ],

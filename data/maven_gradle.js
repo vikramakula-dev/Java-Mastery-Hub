@@ -42,9 +42,59 @@ export const mavenGradleData = {
       output: "N/A (Configuration file)",
       explanation: "A simple pom.xml that defines the project identity and adds JUnit for testing.",
       walkthrough: [
-        { code: "<groupId>com.example</groupId>", note: "The organization or group that created the project." },
+        { code: "<groupId>com.example</groupId>", note: "The organization or group that created the project — together with artifactId and version these form the GAV coordinates that uniquely address every artifact in the Maven universe." },
         { code: "<artifactId>my-app</artifactId>", note: "The unique name of the project." },
-        { code: "<dependency>...</dependency>", note: "Declares a library needed by the project. Maven will download it automatically." }
+        { code: "<scope>test</scope>", note: "Test scope keeps this library on the test classpath ONLY — it never ships inside the packaged application. TestNG, JUnit, and Mockito all belong at this scope." },
+        { code: "<dependency>...</dependency>", note: "Declares a library needed by the project. Maven downloads it (plus its transitive dependencies) from Maven Central into your local ~/.m2 cache automatically." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "Wiring Surefire to testng.xml — How 'mvn test' Runs Your Suite",
+      code: `<!-- inside <build><plugins> in pom.xml -->
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-surefire-plugin</artifactId>
+  <version>3.2.5</version>
+  <configuration>
+    <suiteXmlFiles>
+      <suiteXmlFile>testng.xml</suiteXmlFile>
+    </suiteXmlFiles>
+  </configuration>
+</plugin>
+
+<!-- Then in CI: -->
+<!-- mvn clean test -Dbrowser=firefox -Denv=staging -->`,
+      output: "(mvn test now executes your testng.xml — groups, parameters, and parallel settings included)",
+      explanation: "Surefire is the plugin that actually runs tests during the 'test' phase — pointing it at testng.xml hands your whole suite definition to one command.",
+      selenium: "This is the answer to 'how does CI run your tests?': the pipeline calls mvn clean test, Surefire reads testng.xml, TestNG orchestrates the browsers.",
+      walkthrough: [
+        { code: "<artifactId>maven-surefire-plugin</artifactId>", note: "Surefire runs during the 'test' lifecycle phase. Without explicit configuration it auto-detects classes named *Test — with <suiteXmlFiles> it delegates entirely to your testng.xml instead, bringing groups and parallel settings along." },
+        { code: "<suiteXmlFile>testng.xml</suiteXmlFile>", note: "One line connects the two worlds: Maven's lifecycle on the outside, TestNG's suite orchestration on the inside. You can list multiple suite files, or override at the command line with -DsuiteXmlFile=smoke.xml for different CI jobs." },
+        { code: "mvn clean test -Dbrowser=firefox", note: "clean wipes target/, test runs everything up through the test phase, and -D properties travel into Java via System.getProperty(\"browser\") — one pipeline, any browser/environment, zero file edits." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "The Lifecycle in Command Lines",
+      code: `# Each phase runs everything before it:
+mvn validate    # is the pom well-formed?
+mvn compile     # src/main/java -> target/classes
+mvn test        # + compile tests, run Surefire (your TestNG suite)
+mvn package     # + produce the JAR/WAR in target/
+mvn install     # + copy the artifact into your local ~/.m2 repo
+mvn deploy      # + publish to the remote repository
+
+# The two you type daily:
+mvn clean test                       # fresh test run
+mvn dependency:tree                  # who pulled in which version of what?`,
+      output: "(clean test: BUILD SUCCESS with your TestNG results; dependency:tree: the full transitive graph)",
+      explanation: "The lifecycle is a conveyor belt of phases — invoking any phase runs all phases before it, which is why 'mvn test' compiles first without being asked.",
+      selenium: "dependency:tree is the diagnostic for the classic 'NoSuchMethodError after adding a library' — two dependencies fighting over one transitive version.",
+      walkthrough: [
+        { code: "mvn test", note: "Runs validate → compile → test-compile → test in order. This 'everything before it' rule is why you never need to remember to compile first — and why a compile error fails the test command." },
+        { code: "mvn clean test", note: "clean is NOT part of the default lifecycle — it's a separate one that deletes target/. Combining them guarantees no stale .class files from a previous build contaminate the run: the standard CI incantation." },
+        { code: "mvn dependency:tree", note: "Prints every dependency with its transitive children and which versions won (nearest-wins). When selenium-java and another library both drag in different Guava versions, this command is how you find out before the runtime does." }
       ]
     }
   ],

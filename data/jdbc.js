@@ -50,10 +50,66 @@ public class JdbcExample {
       output: "ID: 1, Name: Alice\nID: 2, Name: Bob",
       explanation: "A simple JDBC program using try-with-resources to ensure connections are closed safely.",
       walkthrough: [
-        { code: "Connection conn = DriverManager.getConnection(url, user, password);", note: "Establishes a connection to the database." },
-        { code: "PreparedStatement pstmt = conn.prepareStatement(query)", note: "Prepares the SQL query, making it safe from SQL injection." },
-        { code: "pstmt.setInt(1, 18);", note: "Sets the first placeholder (?) in the query to 18." },
-        { code: "ResultSet rs = pstmt.executeQuery();", note: "Executes the query and stores the result." }
+        { code: "Connection conn = DriverManager.getConnection(url, user, password);", note: "Opens the network session to the database. Declared inside try-with-resources parentheses, so it closes automatically in reverse order — even if the query throws. In real frameworks the credentials come from config, never hardcoded." },
+        { code: "PreparedStatement pstmt = conn.prepareStatement(query)", note: "The SQL is sent with ? placeholders — parameter values travel separately and can never be parsed as SQL, which is what makes injection structurally impossible." },
+        { code: "pstmt.setInt(1, 18);", note: "Binds placeholder #1 (JDBC parameters are 1-indexed, a classic off-by-one trap) with a TYPED setter — setInt, setString, setDate keep Java types and SQL types aligned." },
+        { code: "while (rs.next()) { ... }", note: "The cursor starts BEFORE the first row; next() advances and reports whether a row exists — so this loop enters once per row and exits cleanly at the end." }
+      ]
+    },
+    {
+      level: "Intermediate",
+      title: "INSERT with executeUpdate — and Asserting the Row Count",
+      code: `String insert = "INSERT INTO users (email, status) VALUES (?, ?)";
+
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     PreparedStatement pstmt = conn.prepareStatement(insert)) {
+
+    pstmt.setString(1, "qa.test@example.com");
+    pstmt.setString(2, "ACTIVE");
+
+    int rowsInserted = pstmt.executeUpdate();
+    System.out.println("Rows inserted: " + rowsInserted);
+    // In a test:  Assert.assertEquals(rowsInserted, 1);
+} catch (SQLException e) {
+    e.printStackTrace();
+}`,
+      output: "Rows inserted: 1",
+      explanation: "executeUpdate (not executeQuery) is for INSERT/UPDATE/DELETE — and its int return value is itself an assertion opportunity.",
+      selenium: "Test-data seeding: insert the user your Selenium test needs directly, in milliseconds, instead of clicking through a registration flow — then delete it in @AfterMethod.",
+      walkthrough: [
+        { code: "int rowsInserted = pstmt.executeUpdate();", note: "executeUpdate returns the affected-row COUNT — assertEquals(1, rowsInserted) proves exactly one row landed. Calling executeQuery on an INSERT throws SQLException; the method names split reads from writes on purpose." },
+        { code: "pstmt.setString(2, \"ACTIVE\");", note: "Each placeholder gets its own typed bind. Reusing the same PreparedStatement with new bind values in a loop is the efficient bulk-seed pattern — the SQL is parsed once, executed many times." }
+      ]
+    },
+    {
+      level: "Selenium-Oriented",
+      title: "The Full SDET Loop — UI Action, DB Proof",
+      code: `/* 1. Drive the UI with Selenium: */
+// registrationPage.registerUser("qa.test@example.com", "Passw0rd!");
+// Assert.assertTrue(confirmationPage.isSuccessShown());
+
+/* 2. Prove it in the database: */
+String check = "SELECT status, created_at FROM users WHERE email = ?";
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     PreparedStatement pstmt = conn.prepareStatement(check)) {
+
+    pstmt.setString(1, "qa.test@example.com");
+    ResultSet rs = pstmt.executeQuery();
+
+    if (rs.next()) {
+        System.out.println("DB row found, status = " + rs.getString("status"));
+        // Assert.assertEquals(rs.getString("status"), "PENDING_VERIFICATION");
+    } else {
+        System.out.println("FAIL: UI said success but no DB row exists!");
+    }
+}`,
+      output: "DB row found, status = PENDING_VERIFICATION",
+      explanation: "UI success only proves the front end rendered a message — the SELECT proves the system actually persisted the right state.",
+      selenium: "This two-layer assertion IS 'database validation' from SDET job descriptions: catch the bug class where the UI celebrates while the backend silently dropped the write.",
+      walkthrough: [
+        { code: "WHERE email = ?", note: "Look the row up by the NATURAL key the test controlled (the email it typed) — never by guessing the auto-generated id, which the database assigned and your test can't predict." },
+        { code: "if (rs.next()) { ... } else { FAIL }", note: "For a single-row check, one next() call answers 'does the row exist' — and the else branch is the money assertion: UI-said-yes-DB-says-no is precisely the defect this pattern exists to catch." },
+        { code: "rs.getString(\"status\")", note: "Assert COLUMN VALUES, not just existence: the row being present with status CANCELLED would still be a bug. Column-by-name access survives schema reordering; by-index breaks silently." }
       ]
     }
   ],

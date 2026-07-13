@@ -2,10 +2,10 @@ export const modulesList = [
   "Introduction", "OOPS", "Interfaces", "Packages", "Strings",
   "Wrapper Classes", "Java IO", "Exception Handling",
   "Multithreading", "Nested Classes", "Enum & Garbage Collection",
-  "Collections Framework", "Java Networking", "AWT", "Swing", "JVM",
-  "Generics", "Lambdas & Functional Interfaces", "Streams & Optional",
-  "Coding Problems", "TestNG", "Selenium WebDriver",
-  "Design Patterns", "Capstone Projects"
+  "Collections Framework", "Generics", "Lambdas & Functional Interfaces", "Streams & Optional",
+  "Modern Java Features", "JVM", "Java Networking",
+  "Maven & Gradle", "JDBC", "Hibernate & JPA", "Spring Boot", "REST APIs", "Logging", "JUnit & Mockito",
+  "AWT", "Swing", "Design Patterns", "Coding Problems", "TestNG", "Selenium WebDriver", "Capstone Projects"
 ];
 
 export const moduleFileMap = {
@@ -21,17 +21,25 @@ export const moduleFileMap = {
   "Nested Classes": "nested_classes",
   "Enum & Garbage Collection": "enum_gc",
   "Collections Framework": "collections",
-  "Java Networking": "java_networking",
-  "AWT": "awt",
-  "Swing": "swing",
-  "JVM": "jvm",
   "Generics": "generics",
   "Lambdas & Functional Interfaces": "lambdas_functional",
   "Streams & Optional": "streams_optional",
+  "Modern Java Features": "modern_java_features",
+  "JVM": "jvm",
+  "Java Networking": "java_networking",
+  "Maven & Gradle": "maven_gradle",
+  "JDBC": "jdbc",
+  "Hibernate & JPA": "hibernate_jpa",
+  "Spring Boot": "spring_boot",
+  "REST APIs": "rest_apis",
+  "Logging": "logging",
+  "JUnit & Mockito": "junit_mockito",
+  "AWT": "awt",
+  "Swing": "swing",
+  "Design Patterns": "design_patterns",
   "Coding Problems": "coding_problems",
   "TestNG": "testng",
   "Selenium WebDriver": "selenium_webdriver",
-  "Design Patterns": "design_patterns",
   "Capstone Projects": "capstone_projects"
 };
 

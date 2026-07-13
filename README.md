@@ -29,9 +29,9 @@ No backend, no account, no tracking — everything runs entirely in your browser
 
 | | |
 |---|---|
-| 📚 **24 structured modules** | Core Java through `JVM` internals, modern Java (**Generics**, **Lambdas**, **Streams & Optional**), and the full SDET toolkit: **Coding Problems**, **TestNG**, **Selenium WebDriver**, **Design Patterns**, **Capstone Projects** |
-| 💡 **195 real-world interview questions** | Scenario-based, not definition recall — *"your parallel suite works with 2 threads but fails with 8, why?"* instead of *"what is a thread?"* |
-| 🧩 **67 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
+| 📚 **32 structured modules** | Core Java through `JVM` internals, modern Java, the backend ecosystem (**Maven**, **JDBC**, **Hibernate**, **Spring Boot**, **REST APIs**, **Logging**, **JUnit & Mockito**), and the full SDET toolkit: **Coding Problems**, **TestNG**, **Selenium WebDriver**, **Design Patterns**, **Capstone Projects** |
+| 💡 **243 real-world interview questions** | Scenario-based, not definition recall — *"your parallel suite works with 2 threads but fails with 8, why?"* instead of *"what is a thread?"* |
+| 🧩 **89 fill-in-the-blank code challenges** | Active recall practice with instant checking and reveal-solution fallback |
 | 🃏 **Flashcards** | Auto-generated from each module's interview questions, with flip and next-card navigation |
 | 📝 **Notes** | Freeform per-topic notes with `#tag` highlighting, saved locally |
 | 🎯 **Mock interviews** | A dedicated Selenium interview question bank (locators, waits, Shadow DOM, relative locators, and more) |
@@ -44,22 +44,27 @@ No backend, no account, no tracking — everything runs entirely in your browser
 ## Curriculum
 
 <details>
-<summary><strong>Core Java (16 modules)</strong></summary>
+<summary><strong>Core & Modern Java (18 modules)</strong></summary>
 
-Introduction · OOPS · Interfaces · Packages · Strings · Wrapper Classes · Java IO · Exception Handling · Multithreading · Nested Classes · Enum & Garbage Collection · Collections Framework · Java Networking · AWT · Swing · JVM
+Introduction · OOPS · Interfaces · Packages · Strings · Wrapper Classes · Java IO · Exception Handling · Multithreading · Nested Classes · Enum & Garbage Collection · Collections Framework · Generics · Lambdas & Functional Interfaces · Streams & Optional · Modern Java Features · JVM · Java Networking
 
 </details>
 
 <details>
-<summary><strong>Beyond the basics (8 modules)</strong></summary>
+<summary><strong>Backend Ecosystem (7 modules)</strong></summary>
 
-- **Generics** — type parameters, generic methods, bounded types, wildcards, type erasure
-- **Lambdas & Functional Interfaces** — the big four (`Supplier`/`Consumer`/`Function`/`Predicate`), all four method-reference forms, custom wait conditions
-- **Streams & Optional** — lazy pipelines, `map`/`filter`/`collect`, terminal-operation choice, `Optional` as API design
+Maven & Gradle · JDBC · Hibernate & JPA · Spring Boot · REST APIs · Logging · JUnit & Mockito — each taught through the SDET lens: database validation, API-driven test setup, framework logging, and unit-testing your own utilities
+
+</details>
+
+<details>
+<summary><strong>SDET Toolkit (7 modules)</strong></summary>
+
+- **AWT / Swing** — Robot class for native dialogs, EDT rules for building internal test tools
+- **Design Patterns** — Singleton (with `ThreadLocal`), Factory, Builder, and Page Object Model, each mapped directly to real Selenium framework code
 - **Coding Problems** — the live-coding round: reverse/palindrome/anagram, duplicates, second-largest, Fibonacci — each with the interview-protocol walkthrough
 - **TestNG** — annotation lifecycle, hard vs `SoftAssert`, `@DataProvider`, `testng.xml` parallel execution, listeners, retry analyzers
 - **Selenium WebDriver** — the 8 locators, the wait ladder (presence→visible→clickable), Actions, windows/frames/alerts, `Select`, `JavascriptExecutor`
-- **Design Patterns** — Singleton (with `ThreadLocal`), Factory, Builder, and Page Object Model, each mapped directly to real Selenium framework code
 - **Capstone Projects** — build a Mini POM framework, a Test Data Manager, and a parallel cross-browser test runner, milestone by milestone
 
 </details>

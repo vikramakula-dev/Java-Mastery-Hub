@@ -103,6 +103,13 @@ export async function renderQuiz() {
       "Interfaces": "frameworks",
       "Multithreading": "frameworks",
       "TestNG": "frameworks",
+      "JUnit & Mockito": "frameworks",
+      "Maven & Gradle": "frameworks",
+      "JDBC": "frameworks",
+      "Hibernate & JPA": "frameworks",
+      "Spring Boot": "frameworks",
+      "REST APIs": "frameworks",
+      "Logging": "frameworks",
       "Design Patterns": "frameworks",
       "Capstone Projects": "frameworks"
     };
